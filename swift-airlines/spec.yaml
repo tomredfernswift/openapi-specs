@@ -42,7 +42,7 @@
       "get" : {
         "tags" : [ "Reservation" ],
         "description" : "Performs a filter on reservations by the following:\n  * reservation date in YYYY-MM-DD format\n  * route codes, separated by comma(,)\nA route code consists of the origin and destination airport codes concatenated together.\n",
-        "operationId" : "retrieveReservations",
+        "operationId" : "retrieveAReservations",
         "parameters" : [ {
           "name" : "reserved_date",
           "in" : "query",
