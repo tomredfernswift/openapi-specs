@@ -1,0 +1,2299 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "title" : "Swift Airlines - OpenAPI specification example",
+    "description" : "TEST",
+    "contact" : {
+      "name" : "Swift Standards & Developer Hub",
+      "url" : "https://developer.swift.com",
+      "email" : "developer-support@swift.com"
+    },
+    "license" : {
+      "name" : "API Restricted License",
+      "url" : "https://www.swift.com/file/56776/download"
+    },
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/SWIFT-API/Style_Guide_2_4_TEST/1.0.0",
+    "description" : "SwaggerHub API Auto Mocking"
+  }, {
+    "url" : "https://sandbox.swift.com/airline-reservations/v1",
+    "description" : "Sandbox"
+  }, {
+    "url" : "https://api-test.swiftnet.sipn.swift.com/airline-reservations-pilot/v1",
+    "description" : "Pilot (MV-SIPN)"
+  }, {
+    "url" : "https://api.swiftnet.sipn.swift.com/airline-reservations/v1",
+    "description" : "Live (MV-SIPN)"
+  } ],
+  "security" : [ {
+    "bearerToken" : [ ]
+  } ],
+  "tags" : [ {
+    "name" : "Reservation",
+    "description" : "Create and make changes to airline reservations."
+  }, {
+    "name" : "Check-in",
+    "description" : "Passenger check-in, including seat allocation or flight transfer."
+  } ],
+  "paths" : {
+    "/flight-reservations" : {
+      "get" : {
+        "tags" : [ "Reservation" ],
+        "description" : "Performs a filter on reservations by the following:\n  * reservation date in YYYY-MM-DD format\n  * route codes, separated by comma(,)\nA route code consists of the origin and destination airport codes concatenated together.\n",
+        "operationId" : "retrieveReservations",
+        "parameters" : [ {
+          "name" : "reserved_date",
+          "in" : "query",
+          "description" : "Filters reservations by the date the reservation was created.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date"
+          },
+          "example" : "2023-01-18"
+        }, {
+          "name" : "route",
+          "in" : "query",
+          "description" : "Filters reservations by one or more routes.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "maxLength" : 6,
+              "type" : "string"
+            }
+          },
+          "example" : [ "CDGAMS", "LHRLAX" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                },
+                "examples" : {
+                  "Reservations" : {
+                    "$ref" : "#/components/examples/Reservations"
+                  },
+                  "NoRecords" : {
+                    "$ref" : "#/components/examples/NoRecords"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "400-ReservedDateInvalid" : {
+                    "$ref" : "#/components/examples/400-ReservedDateInvalid"
+                  },
+                  "400-RouteCodeInvalid" : {
+                    "$ref" : "#/components/examples/400-RouteCodeInvalid"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "401-InvalidToken" : {
+                    "$ref" : "#/components/examples/401-InvalidToken"
+                  },
+                  "401-InsufficientScope" : {
+                    "$ref" : "#/components/examples/401-InsufficientScope"
+                  },
+                  "401-ServiceNotProvisioned" : {
+                    "$ref" : "#/components/examples/401-ServiceNotProvisioned"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "403-Forbidden" : {
+                    "$ref" : "#/components/examples/403-Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "404-NotFound" : {
+                    "$ref" : "#/components/examples/404-NotFound"
+                  }
+                }
+              }
+            }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "405-MethodNotAllowed" : {
+                    "$ref" : "#/components/examples/405-MethodNotAllowed"
+                  }
+                }
+              }
+            }
+          },
+          "414" : {
+            "description" : "URI Too Long",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "414-URITooLong" : {
+                    "$ref" : "#/components/examples/414-URITooLong"
+                  }
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too Many Requests",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "429-TooManyRequests" : {
+                    "$ref" : "#/components/examples/429-TooManyRequests"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          },
+          "502" : {
+            "description" : "Bad Gateway",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "502-BadGateway" : {
+                    "$ref" : "#/components/examples/502-BadGateway"
+                  }
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "503-ServiceUnavailable" : {
+                    "$ref" : "#/components/examples/503-ServiceUnavailable"
+                  }
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Gateway Timeout",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "504-GatewayTimeout" : {
+                    "$ref" : "#/components/examples/504-GatewayTimeout"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Reservation" ],
+        "summary" : "Payment data.",
+        "description" : "Creates a reservation.",
+        "operationId" : "createReservation",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Reservation"
+              },
+              "examples" : {
+                "CreateReservation" : {
+                  "$ref" : "#/components/examples/CreateReservation"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Reservation"
+                },
+                "examples" : {
+                  "ReservationTwoPassengers" : {
+                    "$ref" : "#/components/examples/ReservationTwoPassengers"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "400-RouteCodeInvalid" : {
+                    "$ref" : "#/components/examples/400-RouteCodeInvalid"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "401-InvalidToken" : {
+                    "$ref" : "#/components/examples/401-InvalidToken"
+                  },
+                  "401-InsufficientScope" : {
+                    "$ref" : "#/components/examples/401-InsufficientScope"
+                  },
+                  "401-ServiceNotProvisioned" : {
+                    "$ref" : "#/components/examples/401-ServiceNotProvisioned"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "403-Forbidden" : {
+                    "$ref" : "#/components/examples/403-Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "404-NotFound" : {
+                    "$ref" : "#/components/examples/404-NotFound"
+                  }
+                }
+              }
+            }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "405-MethodNotAllowed" : {
+                    "$ref" : "#/components/examples/405-MethodNotAllowed"
+                  }
+                }
+              }
+            }
+          },
+          "413" : {
+            "description" : "Payload Too Large",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "413-PayloadTooLarge" : {
+                    "$ref" : "#/components/examples/413-PayloadTooLarge"
+                  }
+                }
+              }
+            }
+          },
+          "414" : {
+            "description" : "URI Too Long",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "414-URITooLong" : {
+                    "$ref" : "#/components/examples/414-URITooLong"
+                  }
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too Many Requests",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "429-TooManyRequests" : {
+                    "$ref" : "#/components/examples/429-TooManyRequests"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          },
+          "502" : {
+            "description" : "Bad Gateway",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "502-BadGateway" : {
+                    "$ref" : "#/components/examples/502-BadGateway"
+                  }
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "503-ServiceUnavailable" : {
+                    "$ref" : "#/components/examples/503-ServiceUnavailable"
+                  }
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Gateway Timeout",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "504-GatewayTimeout" : {
+                    "$ref" : "#/components/examples/504-GatewayTimeout"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight-reservations/{reservation_id}" : {
+      "get" : {
+        "tags" : [ "Reservation" ],
+        "summary" : "Payment data.",
+        "description" : "Retrieves a reservation by ID.",
+        "operationId" : "retrieveReservation",
+        "parameters" : [ {
+          "name" : "reservation_id",
+          "in" : "path",
+          "description" : "Identifies a single reservation.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "maxLength" : 6,
+            "type" : "string"
+          },
+          "example" : "X36Q9C"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Reservation"
+                },
+                "examples" : {
+                  "ReservationTwoPassengers" : {
+                    "$ref" : "#/components/examples/ReservationTwoPassengers"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "400-ReservationIdInvalid" : {
+                    "$ref" : "#/components/examples/400-ReservationIdInvalid"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "401-InvalidToken" : {
+                    "$ref" : "#/components/examples/401-InvalidToken"
+                  },
+                  "401-InsufficientScope" : {
+                    "$ref" : "#/components/examples/401-InsufficientScope"
+                  },
+                  "401-ServiceNotProvisioned" : {
+                    "$ref" : "#/components/examples/401-ServiceNotProvisioned"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "403-Forbidden" : {
+                    "$ref" : "#/components/examples/403-Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "404-NotFound" : {
+                    "$ref" : "#/components/examples/404-NotFound"
+                  }
+                }
+              }
+            }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "405-MethodNotAllowed" : {
+                    "$ref" : "#/components/examples/405-MethodNotAllowed"
+                  }
+                }
+              }
+            }
+          },
+          "413" : {
+            "description" : "Payload Too Large",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "413-PayloadTooLarge" : {
+                    "$ref" : "#/components/examples/413-PayloadTooLarge"
+                  }
+                }
+              }
+            }
+          },
+          "414" : {
+            "description" : "URI Too Long",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "414-URITooLong" : {
+                    "$ref" : "#/components/examples/414-URITooLong"
+                  }
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too Many Requests",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "429-TooManyRequests" : {
+                    "$ref" : "#/components/examples/429-TooManyRequests"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          },
+          "502" : {
+            "description" : "Bad Gateway",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "502-BadGateway" : {
+                    "$ref" : "#/components/examples/502-BadGateway"
+                  }
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "503-ServiceUnavailable" : {
+                    "$ref" : "#/components/examples/503-ServiceUnavailable"
+                  }
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Gateway Timeout",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "504-GatewayTimeout" : {
+                    "$ref" : "#/components/examples/504-GatewayTimeout"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight-reservations/{reservation_id}/check-in" : {
+      "post" : {
+        "tags" : [ "Check-in" ],
+        "summary" : "Payment data.",
+        "description" : "Makes a request to check-in all the passengers on a single reservation.",
+        "operationId" : "checkIn",
+        "parameters" : [ {
+          "name" : "reservation_id",
+          "in" : "path",
+          "description" : "Identifies a single reservation.",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "maxLength" : 6,
+            "type" : "string"
+          },
+          "example" : "X36Q9C"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CheckIn"
+              },
+              "examples" : {
+                "CheckInRequest" : {
+                  "$ref" : "#/components/examples/CheckInRequest"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CheckIn"
+                },
+                "examples" : {
+                  "CheckInSuceeded" : {
+                    "$ref" : "#/components/examples/CheckInSuceeded"
+                  },
+                  "APISNotProvided" : {
+                    "$ref" : "#/components/examples/APISNotProvided"
+                  },
+                  "FlightFull" : {
+                    "$ref" : "#/components/examples/FlightFull"
+                  },
+                  "SeatNotAvilable" : {
+                    "$ref" : "#/components/examples/SeatNotAvilable"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "400-SeatCodeInvalid" : {
+                    "$ref" : "#/components/examples/400-SeatCodeInvalid"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "401-InvalidToken" : {
+                    "$ref" : "#/components/examples/401-InvalidToken"
+                  },
+                  "401-InsufficientScope" : {
+                    "$ref" : "#/components/examples/401-InsufficientScope"
+                  },
+                  "401-ServiceNotProvisioned" : {
+                    "$ref" : "#/components/examples/401-ServiceNotProvisioned"
+                  }
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "403-Forbidden" : {
+                    "$ref" : "#/components/examples/403-Forbidden"
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "404-NotFound" : {
+                    "$ref" : "#/components/examples/404-NotFound"
+                  }
+                }
+              }
+            }
+          },
+          "405" : {
+            "description" : "Method Not Allowed",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "405-MethodNotAllowed" : {
+                    "$ref" : "#/components/examples/405-MethodNotAllowed"
+                  }
+                }
+              }
+            }
+          },
+          "413" : {
+            "description" : "Payload Too Large",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "413-PayloadTooLarge" : {
+                    "$ref" : "#/components/examples/413-PayloadTooLarge"
+                  }
+                }
+              }
+            }
+          },
+          "414" : {
+            "description" : "URI Too Long",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "414-URITooLong" : {
+                    "$ref" : "#/components/examples/414-URITooLong"
+                  }
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Too Many Requests",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "429-TooManyRequests" : {
+                    "$ref" : "#/components/examples/429-TooManyRequests"
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          },
+          "502" : {
+            "description" : "Bad Gateway",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "502-BadGateway" : {
+                    "$ref" : "#/components/examples/502-BadGateway"
+                  }
+                }
+              }
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "503-ServiceUnavailable" : {
+                    "$ref" : "#/components/examples/503-ServiceUnavailable"
+                  }
+                }
+              }
+            }
+          },
+          "504" : {
+            "description" : "Gateway Timeout",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "504-GatewayTimeout" : {
+                    "$ref" : "#/components/examples/504-GatewayTimeout"
+                  }
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "Internal Server Error",
+            "headers" : {
+              "X-Request-ID" : {
+                "$ref" : "#/components/headers/X-Request-ID"
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorMessage"
+                },
+                "examples" : {
+                  "500-InternalServerError" : {
+                    "$ref" : "#/components/examples/500-InternalServerError"
+                  },
+                  "500-Unexpected" : {
+                    "$ref" : "#/components/examples/500-Unexpected"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Reservation" : {
+        "required" : [ "flight", "passengers" ],
+        "type" : "object",
+        "properties" : {
+          "reservation_id" : {
+            "maxLength" : 6,
+            "type" : "string"
+          },
+          "passengers" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Passenger"
+            }
+          },
+          "flight" : {
+            "$ref" : "#/components/schemas/Flight"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "An airline reservation."
+      },
+      "Passenger" : {
+        "type" : "object",
+        "properties" : {
+          "pax_full_name" : {
+            "maxLength" : 50,
+            "type" : "string"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "An airline passenger."
+      },
+      "CheckIn" : {
+        "required" : [ "reservation_id", "seats" ],
+        "type" : "object",
+        "properties" : {
+          "reservation_id" : {
+            "maxLength" : 6,
+            "type" : "string"
+          },
+          "seats" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Seat"
+            }
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/CheckInStatus"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "Information about passenger check-in"
+      },
+      "Flight" : {
+        "required" : [ "flight_number", "route" ],
+        "type" : "object",
+        "properties" : {
+          "route" : {
+            "maxLength" : 6,
+            "type" : "string",
+            "description" : "A string containing the departure airport code and the destination airport code concatenated together."
+          },
+          "flight_number" : {
+            "maxLength" : 7,
+            "pattern" : "^([A-Z]{3}|[A-Z\\d]{2})(?:\\s?)(\\d{1,4})$",
+            "type" : "string"
+          },
+          "departure_date_time" : {
+            "type" : "string",
+            "description" : "The date and time of departure of the aircraft.",
+            "format" : "date-time"
+          },
+          "aircraft_type" : {
+            "type" : "string",
+            "enum" : [ "A380" ]
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "Represents a single leg of a passengers journey."
+      },
+      "Seat" : {
+        "type" : "object",
+        "properties" : {
+          "seat_number" : {
+            "maxLength" : 4,
+            "type" : "string"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "A seat on an aircraft."
+      },
+      "CheckInStatus" : {
+        "required" : [ "checked_in" ],
+        "type" : "object",
+        "properties" : {
+          "checked_in" : {
+            "type" : "boolean"
+          },
+          "reason_code" : {
+            "type" : "string",
+            "description" : "A reason why a reservation was not checked in.\n",
+            "enum" : [ "APISNA", "FLIGHTFL", "SEATNA", "OTHER" ]
+          },
+          "priority_boarding" : {
+            "type" : "boolean"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "The check-in status of a reservation."
+      },
+      "ErrorMessage" : {
+        "required" : [ "code", "severity", "text" ],
+        "type" : "object",
+        "properties" : {
+          "severity" : {
+            "type" : "string",
+            "description" : "The category of error.\n  * Fatal means the failure is permanent and the request should not be retried.\n  * Transient means the failure is temporary and the request can be retried after a suitable interval.\n  * Logic is a legacy code and should not be used. \n",
+            "enum" : [ "Fatal", "Transient", "Logic" ]
+          },
+          "code" : {
+            "maxLength" : 50,
+            "type" : "string",
+            "description" : "A unique string which should identify the error and the system or service where it originated."
+          },
+          "text" : {
+            "maxLength" : 1000,
+            "type" : "string",
+            "description" : "free-text field which should describe the problem and any recovery or remediation steps which can be taken."
+          },
+          "origin" : {
+            "maxLength" : 20,
+            "type" : "string",
+            "description" : "Identifies the backend service (or proxy) where the error originated.\nIt is *strongly recommended* that this field is populated on all errors to assist with support and service delivery activities.\n"
+          },
+          "user_message" : {
+            "maxLength" : 100,
+            "type" : "string",
+            "description" : "A message to display to an active user if there is one."
+          },
+          "more_info" : {
+            "type" : "string",
+            "description" : "A URL pointing to a resource which contains further information about the error, if one exists.",
+            "format" : "uri"
+          }
+        },
+        "additionalProperties" : false
+      },
+      "Link" : {
+        "required" : [ "href" ],
+        "type" : "object",
+        "properties" : {
+          "href" : {
+            "maxLength" : 256,
+            "type" : "string",
+            "description" : "The link target, either an absolute or relative URI.\n"
+          },
+          "rel" : {
+            "maxLength" : 35,
+            "type" : "string",
+            "description" : "The link target, either an absolute or relative URI.\nThe relationship of the link target to the current resource.\nCommon values are \"self\", \"previous\", \"next\", etc.\n"
+          },
+          "type" : {
+            "maxLength" : 35,
+            "type" : "string",
+            "description" : "The link target, either an absolute or relative URI.\nBy convention, the HTTP operation to invoke against the link target.\nDefaults to GET.\n"
+          }
+        },
+        "additionalProperties" : false,
+        "description" : "Contains a generic structure to support hypermedia controls.\nBased on https://www.rfc-editor.org/rfc/rfc8288\n"
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "results" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Reservation"
+            }
+          },
+          "links" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Link"
+            }
+          }
+        },
+        "additionalProperties" : false
+      }
+    },
+    "responses" : {
+      "406-NotAcceptable" : {
+        "description" : "Not Acceptable",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "406-Encoding" : {
+                "$ref" : "#/components/examples/406-Encoding"
+              },
+              "406-Language" : {
+                "$ref" : "#/components/examples/406-Language"
+              }
+            }
+          }
+        }
+      },
+      "415-UnsupportedMediaType" : {
+        "description" : "Unsupported Media Type",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "415-UnsupportedMediaType" : {
+                "$ref" : "#/components/examples/415-UnsupportedMediaType"
+              }
+            }
+          }
+        }
+      },
+      "401-Unauthorized" : {
+        "description" : "Unauthorized",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "401-InvalidToken" : {
+                "$ref" : "#/components/examples/401-InvalidToken"
+              },
+              "401-InsufficientScope" : {
+                "$ref" : "#/components/examples/401-InsufficientScope"
+              },
+              "401-ServiceNotProvisioned" : {
+                "$ref" : "#/components/examples/401-ServiceNotProvisioned"
+              }
+            }
+          }
+        }
+      },
+      "403-Forbidden" : {
+        "description" : "Forbidden",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "403-Forbidden" : {
+                "$ref" : "#/components/examples/403-Forbidden"
+              }
+            }
+          }
+        }
+      },
+      "404-NotFound" : {
+        "description" : "Not Found",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "404-NotFound" : {
+                "$ref" : "#/components/examples/404-NotFound"
+              }
+            }
+          }
+        }
+      },
+      "405-MethodNotAllowed" : {
+        "description" : "Method Not Allowed",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "405-MethodNotAllowed" : {
+                "$ref" : "#/components/examples/405-MethodNotAllowed"
+              }
+            }
+          }
+        }
+      },
+      "413-PayloadTooLarge" : {
+        "description" : "Payload Too Large",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "413-PayloadTooLarge" : {
+                "$ref" : "#/components/examples/413-PayloadTooLarge"
+              }
+            }
+          }
+        }
+      },
+      "414-URITooLong" : {
+        "description" : "URI Too Long",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "414-URITooLong" : {
+                "$ref" : "#/components/examples/414-URITooLong"
+              }
+            }
+          }
+        }
+      },
+      "429-TooManyRequests" : {
+        "description" : "Too Many Requests",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "429-TooManyRequests" : {
+                "$ref" : "#/components/examples/429-TooManyRequests"
+              }
+            }
+          }
+        }
+      },
+      "500-InternalServerError" : {
+        "description" : "Internal Server Error",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "500-InternalServerError" : {
+                "$ref" : "#/components/examples/500-InternalServerError"
+              },
+              "500-Unexpected" : {
+                "$ref" : "#/components/examples/500-Unexpected"
+              }
+            }
+          }
+        }
+      },
+      "502-BadGateway" : {
+        "description" : "Bad Gateway",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "502-BadGateway" : {
+                "$ref" : "#/components/examples/502-BadGateway"
+              }
+            }
+          }
+        }
+      },
+      "503-ServiceUnavailable" : {
+        "description" : "Service Unavailable",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "503-ServiceUnavailable" : {
+                "$ref" : "#/components/examples/503-ServiceUnavailable"
+              }
+            }
+          }
+        }
+      },
+      "504-GatewayTimeout" : {
+        "description" : "Gateway Timeout",
+        "headers" : {
+          "X-Request-ID" : {
+            "$ref" : "#/components/headers/X-Request-ID"
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorMessage"
+            },
+            "examples" : {
+              "504-GatewayTimeout" : {
+                "$ref" : "#/components/examples/504-GatewayTimeout"
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "Authorization" : {
+        "name" : "Authorization",
+        "in" : "header",
+        "description" : "Authorization standard HTTP header, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "maxLength" : 1024,
+          "type" : "string"
+        },
+        "example" : "Bearer xx508xx63817x752xx74004x30705xx92x58349x5x78f5xx34xxxxx51"
+      },
+      "ReservationId" : {
+        "name" : "reservation_id",
+        "in" : "path",
+        "description" : "Identifies a single reservation.",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "maxLength" : 6,
+          "type" : "string"
+        },
+        "example" : "X36Q9C"
+      },
+      "ReservedDate" : {
+        "name" : "reserved_date",
+        "in" : "query",
+        "description" : "Filters reservations by the date the reservation was created.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "example" : "2023-01-18"
+      },
+      "Route" : {
+        "name" : "route",
+        "in" : "query",
+        "description" : "Filters reservations by one or more routes.",
+        "required" : false,
+        "style" : "form",
+        "explode" : true,
+        "schema" : {
+          "type" : "array",
+          "items" : {
+            "maxLength" : 6,
+            "type" : "string"
+          }
+        },
+        "example" : [ "CDGAMS", "LHRLAX" ]
+      }
+    },
+    "examples" : {
+      "Reservations" : {
+        "summary" : "A collection of airline reservations.",
+        "value" : {
+          "results" : [ {
+            "reservation_id" : "X36Q9C",
+            "passengers" : [ {
+              "pax_full_name" : "John Connor"
+            }, {
+              "pax_full_name" : "Cyberdine T900"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          }, {
+            "reservation_id" : "7KD90B",
+            "passengers" : [ {
+              "pax_full_name" : "Kyle Reece"
+            } ],
+            "flight" : {
+              "flight_number" : "AA152",
+              "route" : "LHRLAX"
+            }
+          }, {
+            "reservation_id" : "J5NV3A",
+            "passengers" : [ {
+              "pax_full_name" : "Joelie Scutter"
+            }, {
+              "pax_full_name" : "Derrik Troke"
+            }, {
+              "pax_full_name" : "Hettie Gallety"
+            } ],
+            "flight" : {
+              "flight_number" : "AA152",
+              "route" : "LHRLAX"
+            }
+          }, {
+            "reservation_id" : "6S4H47",
+            "passengers" : [ {
+              "pax_full_name" : "Betteanne Billes"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          }, {
+            "reservation_id" : "291C9M",
+            "passengers" : [ {
+              "pax_full_name" : "Aliza Pinshon"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          }, {
+            "reservation_id" : "5OEG23",
+            "passengers" : [ {
+              "pax_full_name" : "Chas Ruselin"
+            }, {
+              "pax_full_name" : "Olivia Sterry"
+            }, {
+              "pax_full_name" : "Hanan Dudenie"
+            }, {
+              "pax_full_name" : "Nobe Tather"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          }, {
+            "reservation_id" : "J5XWE0",
+            "passengers" : [ {
+              "pax_full_name" : "Phillip Mariette"
+            }, {
+              "pax_full_name" : "Lucienne Rampage"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          }, {
+            "reservation_id" : "8CXOG0",
+            "passengers" : [ {
+              "pax_full_name" : "Micheal Van der Hoeven"
+            } ],
+            "flight" : {
+              "flight_number" : "AA152",
+              "route" : "LHRLAX"
+            }
+          }, {
+            "reservation_id" : "OQT6UA",
+            "passengers" : [ {
+              "pax_full_name" : "Malissia McGlashan"
+            }, {
+              "pax_full_name" : "Moses Mirrlees"
+            } ],
+            "flight" : {
+              "flight_number" : "AA152",
+              "route" : "LHRLAX"
+            }
+          }, {
+            "reservation_id" : "BFKEOL",
+            "passengers" : [ {
+              "pax_full_name" : "Geordie Headech"
+            }, {
+              "pax_full_name" : "Spenser O'Brien"
+            }, {
+              "pax_full_name" : "Ethe Jackways"
+            } ],
+            "flight" : {
+              "flight_number" : "BA7654",
+              "route" : "CDGAMS"
+            }
+          } ],
+          "links" : [ {
+            "href" : "/flight-reservations?reserved_date=2023-11-17&route=LHRLAX,CDGAMS&offset=0&limit=10",
+            "rel" : "prev"
+          }, {
+            "href" : "/flight-reservations?reserved_date=2023-11-17&route=LHRLAX,CDGAMS&offset=20&limit=10",
+            "rel" : "next"
+          } ]
+        }
+      },
+      "NoRecords" : {
+        "summary" : "No reservations found.",
+        "value" : {
+          "results" : [ ],
+          "links" : [ ]
+        }
+      },
+      "CreateReservation" : {
+        "summary" : "A request to create a reservtion for two passengers.",
+        "value" : {
+          "passengers" : [ {
+            "pax_full_name" : "John Connor"
+          }, {
+            "pax_full_name" : "Cyberdine T900"
+          } ],
+          "flight" : {
+            "flight_number" : "BA7654",
+            "route" : "CDGAMS"
+          }
+        }
+      },
+      "ReservationTwoPassengers" : {
+        "summary" : "A reservtion for two passengers.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "passengers" : [ {
+            "pax_full_name" : "John Connor"
+          }, {
+            "pax_full_name" : "Cyberdine T900"
+          } ],
+          "flight" : {
+            "aircraft_type" : "A380",
+            "flight_number" : "BA7654",
+            "route" : "CDGAMS",
+            "departure_date_time" : "2023-05-22T15:50:00Z"
+          }
+        }
+      },
+      "CheckInRequest" : {
+        "summary" : "The check-in information for two passengers.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "seats" : [ {
+            "seat_number" : "66A"
+          }, {
+            "seat_number" : "66B"
+          } ]
+        }
+      },
+      "CheckInSuceeded" : {
+        "summary" : "The check-in succeeded.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "seats" : [ {
+            "seat_number" : "66A"
+          }, {
+            "seat_number" : "66B"
+          } ],
+          "status" : {
+            "checked_in" : true,
+            "priority_boarding" : false
+          }
+        }
+      },
+      "APISNotProvided" : {
+        "summary" : "The check-in failed because advanced passenger information has not been provided.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "seats" : [ {
+            "seat_number" : "66A"
+          }, {
+            "seat_number" : "66B"
+          } ],
+          "status" : {
+            "checked_in" : false,
+            "reason_code" : "APISNA"
+          }
+        }
+      },
+      "SeatNotAvilable" : {
+        "summary" : "The check-in failed due to seat availability.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "seats" : [ {
+            "seat_number" : "66A"
+          }, {
+            "seat_number" : "66B"
+          } ],
+          "status" : {
+            "checked_in" : false,
+            "reason_code" : "SEATNA"
+          }
+        }
+      },
+      "FlightFull" : {
+        "summary" : "The check-in failed because the flight is full.",
+        "value" : {
+          "reservation_id" : "X36Q9C",
+          "seats" : [ {
+            "seat_number" : "66A"
+          }, {
+            "seat_number" : "66B"
+          } ],
+          "status" : {
+            "checked_in" : false,
+            "reason_code" : "FLIGHTFL"
+          }
+        }
+      },
+      "400-ReservedDateInvalid" : {
+        "summary" : "The reservation date passed is not a valid date.",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "RES300",
+          "origin" : "SWIFTAIR-RES",
+          "text" : "Input '22/10/2023' not a valid value for reservation date. Input must be a date in YYYY-MM-DD format."
+        }
+      },
+      "400-RouteCodeInvalid" : {
+        "summary" : "The route passed is not a valid route.",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "RES306",
+          "origin" : "SWIFTAIR-RES",
+          "text" : "Input 'ABCDEF' not a valid value for a route. A route consists of two airport codes concatenated together."
+        }
+      },
+      "400-ReservationIdInvalid" : {
+        "summary" : "The reservation ID passed is not valid.",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "RES307",
+          "origin" : "SWIFTAIR-RES",
+          "text" : "Input 'ABC1' is not a valid value for a reservation. A reservation has a 6 character alpha-numeric identifier.'"
+        }
+      },
+      "400-SeatCodeInvalid" : {
+        "summary" : "The seat code passed is not valid for the aircraft.",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "RES311",
+          "origin" : "SWIFTAIR-RES",
+          "text" : "Seat '35S' does not exist."
+        }
+      },
+      "406-Encoding" : {
+        "summary" : "Unsupported encoding",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Encoding must be UTF-8. Other encodings are not supported."
+        }
+      },
+      "406-Language" : {
+        "summary" : "Unsupported language",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Language <language> is not supported."
+        }
+      },
+      "415-UnsupportedMediaType" : {
+        "summary" : "Unsupported Media Type",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Media type <media-type> is not supported."
+        }
+      },
+      "401-InvalidToken" : {
+        "summary" : "Invalid Token",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "SwAP502",
+          "origin" : "<origin>",
+          "text" : "Invalid OAuth access token."
+        }
+      },
+      "401-InsufficientScope" : {
+        "summary" : "Insufficient Scope",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "SwAP503",
+          "origin" : "<origin>",
+          "text" : "OAuth access token has insufficient scope for the requested service."
+        }
+      },
+      "401-ServiceNotProvisioned" : {
+        "summary" : "Service Not Provisioned",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "SwAP506",
+          "origin" : "<origin>",
+          "text" : "API service not provisioned."
+        }
+      },
+      "403-Forbidden" : {
+        "summary" : "Forbidden",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Not allowed to perform the requested operation."
+        }
+      },
+      "404-NotFound" : {
+        "summary" : "Not Found",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Resource <resource> does not exist."
+        }
+      },
+      "405-MethodNotAllowed" : {
+        "summary" : "Method Not Allowed",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "The operation <operation> is not offered on the path <path>."
+        }
+      },
+      "413-PayloadTooLarge" : {
+        "summary" : "Payload Too Large",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "The operation cannot be completed because the request payload is too large."
+        }
+      },
+      "414-URITooLong" : {
+        "summary" : "URI Too Long",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "The operation cannot be completed because the request url is too long."
+        }
+      },
+      "429-TooManyRequests" : {
+        "summary" : "Rate limiting enforced.",
+        "value" : {
+          "severity" : "Transient",
+          "code" : "SwAP507",
+          "origin" : "<origin>",
+          "text" : "Request cannot be processed at this time. Please try again."
+        }
+      },
+      "500-InternalServerError" : {
+        "summary" : "Internal Server Error",
+        "value" : {
+          "severity" : "Transient",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Server encountered an unexpected condition and cannot fulfill the request."
+        }
+      },
+      "500-Unexpected" : {
+        "summary" : "Default Error",
+        "value" : {
+          "severity" : "Fatal",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Service is temporarily unavailable."
+        }
+      },
+      "502-BadGateway" : {
+        "summary" : "Bad Gateway",
+        "value" : {
+          "severity" : "Transient",
+          "code" : "<error code>",
+          "origin" : "<origin>",
+          "text" : "Service is temporarily unavailable."
+        }
+      },
+      "503-ServiceUnavailable" : {
+        "summary" : "Service Unavailable",
+        "value" : {
+          "severity" : "Transient",
+          "code" : "SwAP590",
+          "origin" : "<origin>",
+          "text" : "Service is temporarily unavailable."
+        }
+      },
+      "504-GatewayTimeout" : {
+        "summary" : "Gateway Timeout",
+        "value" : {
+          "severity" : "Transient",
+          "code" : "SwAP591",
+          "origin" : "<origin>",
+          "text" : "Service Provider time out."
+        }
+      }
+    },
+    "headers" : {
+      "X-Request-ID" : {
+        "description" : "Identifies the call through the Swift platform call stack.",
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "string",
+          "format" : "uuid"
+        },
+        "example" : "251d56b7-cbfe-4916-ae48-8631949657aa"
+      }
+    },
+    "securitySchemes" : {
+      "bearerToken" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "opaque OAuth 2.0"
+      },
+      "clientCredentials" : {
+        "type" : "oauth2",
+        "flows" : {
+          "clientCredentials" : {
+            "tokenUrl" : "/v1/oauth2/token",
+            "scopes" : { }
+          }
+        }
+      }
+    }
+  }
+}
