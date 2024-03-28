@@ -15,7 +15,7 @@
     "version" : "1.0.1"
   },
   "servers" : [ {
-    "url" : "https://virtserver.swaggerhub.com/SWIFT-API/Style_Guide_2_4_TEST/1.0.0",
+    "url" : "https://virtserver.swaggerhub.com/SWIFT-API/Style_Guide_2_4_TEST/1.0.1",
     "description" : "SwaggerHub API Auto Mocking"
   }, {
     "url" : "https://sandbox.swift.com/airline-reservations/v1",
@@ -356,7 +356,7 @@
         "tags" : [ "Reservation" ],
         "summary" : "Payment data.",
         "description" : "Creates a reservation.",
-        "operationId" : "createReservation",
+        "operationId" : "createAReservation",
         "requestBody" : {
           "content" : {
             "application/json" : {
