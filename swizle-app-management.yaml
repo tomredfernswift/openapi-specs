@@ -1,0 +1,1670 @@
+openapi: 3.0.2
+
+info:
+  title: swizzle App Management API
+  description: >- 
+    This API allows swizzle API customers to self-service their Client Apps on the swizzle API gateway. 
+  version: 1.0.0
+  contact:
+    name: swizzle Standards & Developer Hub
+    url: https://developer.swizzle.com
+    email: developer-support@swizzle.com
+  license:
+    name: API Restricted License
+    url: https://www.swizzle.com/file/56776/download
+
+servers:
+  - description: Live Environment
+    url: https://api.swizzlenet.com/swizzle-app-mgmt/v1
+  - description: Test Environment
+    url: https://api-test.swizzlenet.com/swizzle-app-mgmt/v1
+
+tags:
+  - name: API Products
+  - name: Client Apps
+
+paths:
+
+  /swizzle-app-mgmt/v1/api-products:
+    get:
+      tags: 
+        - API Products
+      summary: Get my subscribed API products
+      description: Returns a collection of all the API products subscribed to by my organisation. 
+      operationId: getApiProducts
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID' 
+        - $ref: '#/components/parameters/Authorization' 
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-ID: 
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiProduct'
+              examples:
+                GetApiProducts:  
+                  summary: Returns my subscribed API products
+                  value:
+                    [
+                      {
+                        "description": "https://developer.swizzle.com/api/securities-view/overview",
+                        "api_product": "Securities-View-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/trade-finance-validation-service/overview",
+                        "api_product": "Trade-Finance-Validation-Service-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/payval/overview",
+                        "api_product": "Payment-Prevalidation-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/gpicore/overview",
+                        "api_product": "GPI-Core-Services-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/transaction-screening-api/overview",
+                        "api_product": "Transaction-Screening-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/swizzle-messaging-api/overview",
+                        "api_product": "swizzle-Messaging-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/g4c/overview",
+                        "api_product": "GPI-for-Corporates-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/gcase/overview",
+                        "api_product": "GPI-Case-Resolution-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/step2-continuous-gross-settlement/overview",
+                        "api_product": "EBA-STEP2-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/rt1-sepa-credit-transfer-inst/overview",
+                        "api_product": "EBA-RT1-API"
+                      },
+                      {
+                        "description": "",
+                        "api_product": "NPP-MMS-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BoE-Raw-Payment-Messages-i1-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BoE-Raw-Payment-Messages-i2-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BoE-Raw-Payment-Messages-i3-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BOE-TS3-i1-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BOE-TS3-i2-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/apis",
+                        "api_product": "BOE-TS3-i3-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/instant-cash-reporting-api/overview",
+                        "api_product": "Instant-Cash-Reporting-API"
+                      },
+                      {
+                        "description": "https://developer.swizzle.com/api/pmi-api/overview",
+                        "api_product": "GPI-PMI-API"
+                      },
+                      {
+                        "description": "",
+                        "api_product": "Tracker-Low-Value-Payments"
+                      }
+                    ]
+                NoResults:  
+                  summary: No subscribed API products
+                  value: []
+        '400':
+          description: >-
+            A 400 Bad Request response status is returned for validation or other business errors.
+            
+            Additionally, swizzle API Gateway uses the 400 status code for the following failure cases: 
+
+              - SwAP510 - The API method does not support non-repudiation.
+
+              - SwAP509 - Missing mandatory signature on the non-repudiation API transaction.
+
+              - SwAP504 - Text is custom to the schema error
+
+              - SwAP504 - Invalid Bic.
+
+              - SwAP504 - Invalid Service.
+
+              - SwAP522 - The request cannot processed. The x-bic value provided is not valid.
+
+              - SwAP504 - JSON request body does not conform to policy.
+
+              - SwAP505 - XML request body does not conform to policy.
+
+              - SwAP501 - API request is malformed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+              examples: 
+                # TBC - App Managment error codes
+                400-APPMGMT01:
+                  $ref: '#/components/examples/400-APPMGMT01'
+                
+                # swizzle API Gateway standard errors
+                400-SwAP510:
+                  $ref: '#/components/examples/400-SwAP510'
+                400-SwAP509:
+                  $ref: '#/components/examples/400-SwAP509'
+                400-SwAP504-txt:
+                  $ref: '#/components/examples/400-SwAP504-txt'
+                400-SwAP504-bic:
+                  $ref: '#/components/examples/400-SwAP504-bic'
+                400-SwAP504-svc:
+                  $ref: '#/components/examples/400-SwAP504-svc'
+                400-SwAP522:
+                  $ref: '#/components/examples/400-SwAP522'
+                400-SwAP504:
+                  $ref: '#/components/examples/400-SwAP504'
+                400-SwAP505:
+                  $ref: '#/components/examples/400-SwAP505'
+                400-SwAP501:
+                  $ref: '#/components/examples/400-SwAP501'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '429':
+          $ref: '#/components/responses/429-TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504-GatewayTimeout'
+        default:
+          $ref: '#/components/responses/500-InternalServerError'
+          
+  /swizzle-app-mgmt/v1/apps:
+    get:  
+      tags: 
+        - Client Apps
+      summary: Get my Client Apps
+      description: >-
+        Get all the Client Apps associated with my organisation which have been created through this API.
+
+      operationId: getClientApps 
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID' 
+        - $ref: '#/components/parameters/Authorization' 
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-ID: 
+              $ref: '#/components/headers/X-Request-ID' 
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/ClientApp'
+              examples:
+                AllApps:
+                  summary: All my Client Apps
+                  value:
+                    [
+                      {
+                        "status": "approved",
+                        "last_modified_at": 1707846993790,
+                        "app_name": "test1",
+                        "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                        "institution": "citius33",
+                        "credentials": [
+                          {
+                            "status": "approved",
+                            "api_products": [
+                              {
+                                "api_product": "swizzle-securities-monitoring-product-pilot"
+                              },
+                              {
+                                "api_product": "swizzle-preval-product-pilot"
+                              }
+                            ],
+                            "expires_at": -1,
+                            "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                            "issued_at": 1707846993817,
+                            "consumer_secret": "A6nN26Kp9YAXfCA1"
+                          }
+                        ],
+                        "attributes": [
+                          {
+                            "name": "environment",
+                            "value": "live"
+                          },
+                          {
+                            "name": "isLocked",
+                            "value": "False"
+                          }
+                        ],
+                        "created_at": 1707846993790
+                      }
+                    ]
+                NoApps:
+                  summary: No Client Apps found
+                  value: []
+        '400':
+          description: >-
+            A 400 Bad Request response status is returned for validation or other business errors.
+            
+            Additionally, swizzle API Gateway uses the 400 status code for the following failure cases: 
+
+              - SwAP510 - The API method does not support non-repudiation.
+              - SwAP509 - Missing mandatory signature on the non-repudiation API transaction.
+              - SwAP504 - Text is custom to the schema error
+              - SwAP504 - Invalid Bic.
+              - SwAP504 - Invalid Service.
+              - SwAP522 - The request cannot processed. The x-bic value provided is not valid.
+              - SwAP504 - JSON request body does not conform to policy.
+              - SwAP505 - XML request body does not conform to policy.
+              - SwAP501 - API request is malformed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+              examples: 
+                # TBC - App Managment error codes
+                400-APPMGMT01:
+                  $ref: '#/components/examples/400-APPMGMT01'
+                
+                # swizzle API Gateway standard errors
+                400-SwAP510:
+                  $ref: '#/components/examples/400-SwAP510'
+                400-SwAP509:
+                  $ref: '#/components/examples/400-SwAP509'
+                400-SwAP504-txt:
+                  $ref: '#/components/examples/400-SwAP504-txt'
+                400-SwAP504-bic:
+                  $ref: '#/components/examples/400-SwAP504-bic'
+                400-SwAP504-svc:
+                  $ref: '#/components/examples/400-SwAP504-svc'
+                400-SwAP522:
+                  $ref: '#/components/examples/400-SwAP522'
+                400-SwAP504:
+                  $ref: '#/components/examples/400-SwAP504'
+                400-SwAP505:
+                  $ref: '#/components/examples/400-SwAP505'
+                400-SwAP501:
+                  $ref: '#/components/examples/400-SwAP501'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '429':
+          $ref: '#/components/responses/429-TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504-GatewayTimeout'
+        default:
+          $ref: '#/components/responses/500-InternalServerError'
+      
+    post:
+      tags: 
+        - Client Apps
+      summary: Create a Client App
+      description: >-
+        Creates a new Client App. Credentials, including consumer key and secret, will be auto-generated by swizzle.
+        
+        Optionally, an expiry datetime for the generated credentials may also be passed. If no expiry datetime is passed then the credentials will not expire.
+      
+      operationId: createClientApp
+      parameters:
+        - $ref: '#/components/parameters/X-Request-ID' 
+        - $ref: '#/components/parameters/Authorization' 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClientApp'
+            examples:
+              CreateAppNoExpiry:
+                summary: Create a Client App. 
+                value:
+                  {
+                    "app_name": "test_1",
+                    "api_products": [
+                      "swizzle-securities-monitoring-product-pilot",
+                      "swizzle-preval-product-pilot"
+                    ]
+                  } 
+              CreateAppExpires:
+                summary: Create a Client App, which will expire after a certain time.
+                value:
+                  {
+                    "app_name": "test_1",
+                    "expires_at": 1707846993817, 
+                    "api_products": [
+                      "swizzle-securities-monitoring-product-pilot",
+                      "swizzle-preval-product-pilot"
+                    ]
+                  } 
+      responses:
+        '201':
+          description: OK
+          headers:
+            X-Request-ID: 
+              $ref: '#/components/headers/X-Request-ID'
+            Location: 
+              description: Contains the identity of the created Client App.
+              schema:
+                type: string
+                format: uri-template
+              example: /app/c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientApp'
+              examples:
+                AppCreated:
+                  summary: Client App created.
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+                AppCreatedWithExpiry:
+                  summary: Client App created with a credential that expires at some time in the future.
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": 170784784220,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+        '400':
+          description: >-
+            A 400 Bad Request response status is returned for validation or other business errors.
+            
+            Additionally, swizzle API Gateway uses the 400 status code for the following failure cases: 
+
+              - SwAP510 - The API method does not support non-repudiation.
+
+              - SwAP509 - Missing mandatory signature on the non-repudiation API transaction.
+
+              - SwAP504 - Text is custom to the schema error
+
+              - SwAP504 - Invalid Bic.
+
+              - SwAP504 - Invalid Service.
+
+              - SwAP522 - The request cannot processed. The x-bic value provided is not valid.
+
+              - SwAP504 - JSON request body does not conform to policy.
+
+              - SwAP505 - XML request body does not conform to policy.
+
+              - SwAP501 - API request is malformed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+              examples: 
+                # TBC - App Managment error codes
+                400-APPMGMT01:
+                  $ref: '#/components/examples/400-APPMGMT01'
+                
+                # swizzle API Gateway standard errors
+                400-SwAP510:
+                  $ref: '#/components/examples/400-SwAP510'
+                400-SwAP509:
+                  $ref: '#/components/examples/400-SwAP509'
+                400-SwAP504-txt:
+                  $ref: '#/components/examples/400-SwAP504-txt'
+                400-SwAP504-bic:
+                  $ref: '#/components/examples/400-SwAP504-bic'
+                400-SwAP504-svc:
+                  $ref: '#/components/examples/400-SwAP504-svc'
+                400-SwAP522:
+                  $ref: '#/components/examples/400-SwAP522'
+                400-SwAP504:
+                  $ref: '#/components/examples/400-SwAP504'
+                400-SwAP505:
+                  $ref: '#/components/examples/400-SwAP505'
+                400-SwAP501:
+                  $ref: '#/components/examples/400-SwAP501'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '429':
+          $ref: '#/components/responses/429-TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504-GatewayTimeout'
+        default:
+          $ref: '#/components/responses/500-InternalServerError'
+
+  /swizzle-app-mgmt/v1/apps/{app_id}:
+    get:
+      tags: 
+        - Client Apps
+      summary: Get a Client App by ID.
+      description: >-
+        Retrieves one of your organisation's Client Apps.
+
+      operationId: retrieveClientApp 
+      parameters:
+        - $ref: '#/components/parameters/app_id'
+        - $ref: '#/components/parameters/X-Request-ID' 
+        - $ref: '#/components/parameters/Authorization' 
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-ID: 
+              $ref: '#/components/headers/X-Request-ID' 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientApp'
+              examples:
+                GetClientApp:
+                  summary: Retrieve a ClientApp by identifier
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials": [
+                        {
+                          "status": "approved",
+                          "api_products": [
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes": [
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+        '400':
+          description: >-
+            A 400 Bad Request response status is returned for validation or other business errors.
+            
+            Additionally, swizzle API Gateway uses the 400 status code for the following failure cases: 
+
+              - SwAP510 - The API method does not support non-repudiation.
+              - SwAP509 - Missing mandatory signature on the non-repudiation API transaction.
+              - SwAP504 - Text is custom to the schema error
+              - SwAP504 - Invalid Bic.
+              - SwAP504 - Invalid Service.
+              - SwAP522 - The request cannot processed. The x-bic value provided is not valid.
+              - SwAP504 - JSON request body does not conform to policy.
+              - SwAP505 - XML request body does not conform to policy.
+              - SwAP501 - API request is malformed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+              examples: 
+                # TBC - App Managment error codes
+                400-APPMGMT01:
+                  $ref: '#/components/examples/400-APPMGMT01'
+                
+                # swizzle API Gateway standard errors
+                400-SwAP510:
+                  $ref: '#/components/examples/400-SwAP510'
+                400-SwAP509:
+                  $ref: '#/components/examples/400-SwAP509'
+                400-SwAP504-txt:
+                  $ref: '#/components/examples/400-SwAP504-txt'
+                400-SwAP504-bic:
+                  $ref: '#/components/examples/400-SwAP504-bic'
+                400-SwAP504-svc:
+                  $ref: '#/components/examples/400-SwAP504-svc'
+                400-SwAP522:
+                  $ref: '#/components/examples/400-SwAP522'
+                400-SwAP504:
+                  $ref: '#/components/examples/400-SwAP504'
+                400-SwAP505:
+                  $ref: '#/components/examples/400-SwAP505'
+                400-SwAP501:
+                  $ref: '#/components/examples/400-SwAP501'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '429':
+          $ref: '#/components/responses/429-TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504-GatewayTimeout'
+        default:
+          $ref: '#/components/responses/500-InternalServerError'
+    
+    patch:
+      tags: 
+        - Client Apps
+      summary: Manage a Client App
+      description: >-
+        Allows management of one of your organisation's Client Apps. 
+        
+        This operation supports the following use cases: 
+
+          - Create an additional API credential for the Client App
+          - Revoke an API credential for a Client App
+          - Reinstate an API credential for a Client App 
+          - Revoke a Client App
+          - Reinstate Client App
+          - Register additional API Products under a Client App.
+
+      operationId: manageClientApp
+      parameters:
+        - $ref: '#/components/parameters/app_id'
+        - $ref: '#/components/parameters/X-Request-ID' 
+        - $ref: '#/components/parameters/Authorization' 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: '#/components/schemas/RequestNewCrediential'
+                - $ref: '#/components/schemas/RevokeReinstateCredential'
+                - $ref: '#/components/schemas/RevokeReinstateApp'
+                - $ref: '#/components/schemas/RegisterApiProducts'
+              discriminator:
+                propertyName: operation_name
+            examples:
+              RequestANewCrediential:
+                summary: Request an additional API credential for a Client App.
+                value:
+                  {
+                    "operation_name": "RequestNewCrediential"
+                  }
+              RequestANewCredientialPlus:
+                summary: Request an additional API credential for a Client App which expires at some time in the future.
+                value:
+                  {
+                    "operation_name": "RequestNewCrediential",
+                    "expires_at": 1707846993790
+                  }
+              RevokeACredential:
+                summary: Revoke an API credential.
+                value:
+                  {
+                    "operation_name": "RevokeReinstateCredential",
+                    "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                    "action": "revoke"
+                  }
+              ReinstateACredential:
+                summary: Reinstate a previously revoked API credential.
+                value:
+                  {
+                    "operation_name": "RevokeReinstateCredential",
+                    "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                    "action": "approve"
+                  }
+              RevokeApp:
+                summary: Revoke this Client App.
+                value:
+                  {
+                    "operation_name": "RevokeReinstateApp",
+                    "action": "revoke"
+                  }
+              ReinstateApp:
+                summary: Reinstate this Client App.
+                value:
+                  {
+                    "operation_name": "RevokeReinstateApp",
+                    "action": "approve"
+                  }
+              RegisterAnApiProduct:
+                summary: Register additional API Products under this Client App.
+                value:
+                  {
+                    "operation_name": "RegisterApiProducts",
+                    "api_products": [
+                      "swizzle-icr-pilot"
+                    ]
+                  } 
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Request-ID: 
+              $ref: '#/components/headers/X-Request-ID' 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientApp'
+              examples:
+                RequestANewCrediential:
+                  summary: A new API credential was added to the Client App 
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "0YdzbhJfEdx3OD7Q"
+                        },
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "issued_at":4568456233,
+                          "consumer_key": "yJEKCsyYJTeBGQY71JZipjEeEqMOUBF2",
+                          "consumer_secret": "0YdzbhJfEdx3OD7Q"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+                RevokeACredential:
+                  summary: A revoked API credential 
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "revoked",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+                ReinstateACredential:
+                  summary: A reinstated API credential
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+                RevokeAllCredentials:
+                  summary: All API credentials in the Client App were revoked
+                  value:
+                    {
+                      "status": "revoked",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "revoked",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+                RegisterAnApiProduct:
+                  summary: Additional API Products were added to an API credential
+                  value:
+                    {
+                      "status": "approved",
+                      "last_modified_at": 1707846993790,
+                      "app_name": "test1",
+                      "app_id": "c0ef0cc1-ec99-46f9-bd25-ef17d8a1548b",
+                      "institution": "citius33",
+                      "credentials":[
+                        {
+                          "status": "approved",
+                          "api_products":[
+                            {
+                              "api_product": "swizzle-preval-product-live"
+                            },
+                            {
+                              "api_product": "swizzle-preval-product-pilot"
+                            },
+                            {
+                              "api_product": "swizzle-icr-pilot"
+                            },
+                            {
+                              "api_product": "swizzle-icr-live"
+                            }
+                          ],
+                          "expires_at": -1,
+                          "consumer_key": "AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1",
+                          "issued_at": 1707846993817,
+                          "consumer_secret": "A6nN26Kp9YAXfCA1"
+                        }
+                      ],
+                      "attributes":[
+                        {
+                          "name": "environment",
+                          "value": "live"
+                        },
+                        {
+                          "name": "isLocked",
+                          "value": "False"
+                        }
+                      ],
+                      "created_at": 1707846993790
+                    }
+        '400':
+          description: >-
+            A 400 Bad Request response status is returned for validation or other business errors.
+            
+            Additionally, swizzle API Gateway uses the 400 status code for the following failure cases: 
+
+              - SwAP510 - The API method does not support non-repudiation.
+
+              - SwAP509 - Missing mandatory signature on the non-repudiation API transaction.
+
+              - SwAP504 - Text is custom to the schema error
+
+              - SwAP504 - Invalid Bic.
+
+              - SwAP504 - Invalid Service.
+
+              - SwAP522 - The request cannot processed. The x-bic value provided is not valid.
+
+              - SwAP504 - JSON request body does not conform to policy.
+
+              - SwAP505 - XML request body does not conform to policy.
+
+              - SwAP501 - API request is malformed.
+          headers:
+            X-Request-ID:
+              $ref: '#/components/headers/X-Request-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+              examples: 
+                # TBC - App Managment error codes
+                400-APPMGMT01:
+                  $ref: '#/components/examples/400-APPMGMT01'
+                
+                # swizzle API Gateway standard errors
+                400-AppRevoked:
+                  $ref: '#/components/examples/400-AppRevoked'
+                400-SwAP510:
+                  $ref: '#/components/examples/400-SwAP510'
+                400-SwAP509:
+                  $ref: '#/components/examples/400-SwAP509'
+                400-SwAP504-txt:
+                  $ref: '#/components/examples/400-SwAP504-txt'
+                400-SwAP504-bic:
+                  $ref: '#/components/examples/400-SwAP504-bic'
+                400-SwAP504-svc:
+                  $ref: '#/components/examples/400-SwAP504-svc'
+                400-SwAP522:
+                  $ref: '#/components/examples/400-SwAP522'
+                400-SwAP504:
+                  $ref: '#/components/examples/400-SwAP504'
+                400-SwAP505:
+                  $ref: '#/components/examples/400-SwAP505'
+                400-SwAP501:
+                  $ref: '#/components/examples/400-SwAP501'
+        '401':
+          $ref: '#/components/responses/401-Unauthorized'
+        '403':
+          $ref: '#/components/responses/403-Forbidden'
+        '404':
+          $ref: '#/components/responses/404-NotFound'
+        '429':
+          $ref: '#/components/responses/429-TooManyRequests'
+        '500':
+          $ref: '#/components/responses/500-InternalServerError'
+        '503':
+          $ref: '#/components/responses/503-ServiceUnavailable'
+        '504':
+          $ref: '#/components/responses/504-GatewayTimeout'
+        default:
+          $ref: '#/components/responses/500-InternalServerError' 
+
+security:
+- BearerToken: []
+
+components:
+
+  securitySchemes:
+    BearerToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Signed JWT
+
+  parameters:
+    app_id:
+      in: path
+      name: app_id
+      required: true
+      schema:
+        type: string
+        maxLength: 255
+      example: test_1
+
+    consumer_key:
+      in: path
+      name: consumer_key
+      required: true
+      schema:
+        type: string
+        maxLength: 255
+      example: AB9cGcv16S4fFF6bMC6UR0dxC6zdAJO1
+
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      description: End to end tracking ID. This value will be returned to the caller as a response header of the same name. If no header is assigned by the caller, then one will be assigned by swizzle.
+      required: false
+      schema:
+        type: string
+        maxLength: 75
+      example: rrt-1130311210763048898-c-geu2-21394-2055157-17
+
+    Authorization:
+      name: Authorization
+      in: header
+      description: Signed JWT bearer token
+      required: true
+      schema:
+        type: string
+        pattern: "Bearer\\s[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.?[A-Za-z0-9-_.+\/=]*"
+        maxLength: 1024
+      example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJIZWxsbyB5b3UiLCJuYW1lIjoiV2h5IGFyZSB5b3UgY2hlY2tpbmcgbXkgdG9rZW4_ICggzaHCsCDNnMqWIM2hwrApIiwiaWF0IjoxNTE2MjM5MDIyfQ.yAP0xiTwp6vqIYbLKLVBRv-gTyMvU17rT3H8uErLjHA
+ 
+  headers:
+    X-Request-ID:
+      description: End to end tracking ID. This value identifies the callers request in the swizzle API Platform.
+      schema:
+        type: string
+        maxLength: 75
+      example: nlartp03-2674166-324389-2
+
+  schemas:
+    
+    CreateClientApp:
+      type: object
+      additionalProperties: false
+      required:
+        - app_name
+        - api_products
+      properties:
+        app_name:
+          type: string
+          maxLength: 225
+          pattern: '^[0-9a-z0-9][a-zA-Z0-9_-]+$'
+        consumer_key:
+          type: string
+          maxLength: 225
+        consumer_secret:
+          type: string
+          maxLength: 225  
+        expires_at:
+          type: integer
+        api_products:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+
+    ClientApp:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - app_id
+        - app_name
+        - created_at
+        - last_modified_at
+        - credentials
+        - attributes
+        - institution
+      properties:
+        status:
+          type: string
+          enum: 
+            - approved
+            - revoked
+        app_id: 
+          type: string
+          format: uuid
+        app_name:
+          type: string
+          maxLength: 225
+          pattern: '^[0-9a-z0-9][a-zA-Z0-9_-]+$'
+        institution:
+          type: string
+          maxLength: 8
+          example: citius33
+        created_at:
+          type: integer
+        last_modified_at:
+          type: integer
+        credentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/Credentials'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attribute'
+    
+    Credentials:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - api_products
+        - issued_at
+        - expires_at
+        - consumer_key
+        - consumer_secret
+      properties:
+        status:
+          type: string
+          enum: 
+            - approved
+            - revoked
+        api_products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiProduct'
+        issued_at:
+          type: integer
+        expires_at:
+          type: integer
+        consumer_key:
+          type: string
+          maxLength: 225
+        consumer_secret:
+          type: string
+          maxLength: 225  
+    
+    ApiProduct:
+      type: object
+      additionalProperties: false
+      required:
+        - api_product
+      properties:
+        api_product:
+          type: string  
+          maxLength: 255
+        description:
+          type: string  
+          maxLength: 255
+
+    Attribute:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - value
+      properties:
+        name:
+          description: Name of attribute.
+          type: string
+          maxLength: 255  
+        value:
+          description: Value of attribute.
+          type: string
+          maxLength: 255  
+
+    PatchOperationEnum:
+      type: string
+      enum:
+        - RequestNewCrediential
+        - RevokeReinstateCredential
+        - RevokeReinstateApp
+        - RegisterApiProducts
+
+    RequestNewCrediential:
+      type: object
+      additionalProperties: false
+      required:
+        - operation_name
+      properties:
+        operation_name: 
+          $ref: '#/components/schemas/PatchOperationEnum'
+        expires_at:
+          type: integer
+        
+    RevokeReinstateCredential:
+      type: object
+      additionalProperties: false
+      required:
+        - operation_name
+        - consumer_key
+        - action
+      properties:
+        operation_name: 
+          $ref: '#/components/schemas/PatchOperationEnum'
+        consumer_key:
+          type: string
+          maxLength: 225
+        action:
+          type: string
+          enum:
+            - approve
+            - revoke
+
+    RevokeReinstateApp:
+      type: object
+      additionalProperties: false
+      required:
+        - operation_name
+        - action
+      properties:
+        operation_name: 
+          $ref: '#/components/schemas/PatchOperationEnum'  
+        action:
+          type: string
+          enum:
+            - approve
+            - revoke
+
+    RegisterApiProducts:
+      type: object
+      additionalProperties: false
+      required:
+        - operation_name
+        - api_products
+      properties:
+        operation_name: 
+          $ref: '#/components/schemas/PatchOperationEnum'
+        api_products:
+          type: array
+          items:
+            type: string
+            maxLength: 255
+        
+
+    ErrorMessage: 
+      type: object
+      additionalProperties: false
+      properties:
+        severity:
+          description: |
+            The category of error.
+              * Fatal means the failure is permanent and the request should not be retried.
+              * Transient means the failure is temporary and the request can be retried after a suitable interval.
+              * Logic is a legacy code and should not be used. 
+          type: string
+          enum:
+            - Fatal
+            - Transient
+            - Logic
+        code: 
+          description: A unique string which should identify the error and the system or service where it originated.          
+          type: string
+          maxLength: 50
+        text:
+          description: free-text field which should describe the problem and any recovery or remediation steps which can be taken.
+          type: string
+          maxLength: 1000
+      required:
+        - severity
+        - code
+        - text
+      
+  responses: 
+    
+    406-NotAcceptable:
+      description: Not Acceptable
+      headers:
+        X-Request-ID: 
+          $ref: '#/components/headers/X-Request-ID' 
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            406-Encoding:
+              $ref: '#/components/examples/406-Encoding'
+            406-Language:
+              $ref: '#/components/examples/406-Language'
+              
+    415-UnsupportedMediaType:
+      description: Unsupported Media Type
+      headers:
+        X-Request-ID: 
+          description: End to end tracking ID. This value identifies the callers request in the swizzle API Platform.
+          schema:
+            type: string
+            maxLength: 75
+          example: nlartp03-2674166-324389-2 
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+          examples:
+            415-UnsupportedMediaType:
+              $ref: '#/components/examples/415-UnsupportedMediaType'
+    
+    401-Unauthorized:
+      description: >-
+        Covers the following scenarios:
+        
+        * SwAP502 - Invalid Signing Certificate. The certificate cannot be used for doing the API transaction.
+        
+        * SwAP502 - Invalid OAuth access token.
+        
+        * SwAP508 - OAuth access token not provided.
+        
+        * SwAP509 - Customer number not defined.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            401-SwAP502-cert:
+              $ref: '#/components/examples/401-SwAP502-cert'
+            401-SwAP502-token:
+              $ref: '#/components/examples/401-SwAP502-token'
+            401-SwAP508:
+              $ref: '#/components/examples/401-SwAP508'
+            401-SwAP509:
+              $ref: '#/components/examples/401-SwAP509'
+            
+    403-Forbidden:
+      description: >-
+        Covers the following scenarios:
+
+        - SwAP503 - OAuth access token has insufficient scope for the requested service. 
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            403-SwAP503:
+              $ref: '#/components/examples/403-SwAP503'
+    
+    404-NotFound:
+      description: >-
+        Covers the following scenarios:
+
+        - SwAP506 - Resource does not exist.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            404-SwAP506:
+              $ref: '#/components/examples/404-SwAP506'
+
+    429-TooManyRequests:
+      description: >-
+        Covers the following scenarios:
+
+        - SwAP507 - Request cannot be processed at this time. Please try again..
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            429-SwAP507:
+              $ref: '#/components/examples/429-SwAP507'
+
+    503-ServiceUnavailable:
+      description: >-
+        Covers the following scenarios:
+
+        - SwAP590 - Service is temporarily unavailable.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            503-SwAP590:
+              $ref: '#/components/examples/503-SwAP590'
+
+    504-GatewayTimeout:
+      description: >-
+        Covers the following scenarios:
+
+        - SwAP591 - Service Provider time out.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage' 
+          examples:
+            504-SwAP591:
+              $ref: '#/components/examples/504-SwAP591'
+
+    # Default error response #
+    500-InternalServerError: 
+      description: 'Internal Server Error'
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'      
+          examples:
+            500-InternalServerError:
+              $ref: '#/components/examples/500-InternalServerError'  
+
+  examples:
+    406-Encoding:
+      summary: Unsupported encoding
+      value:
+        severity: Fatal
+        code: <error code> 
+        text: Encoding must be UTF-8. Other encodings are not supported. 
+        
+    406-Language:
+      summary: Unsupported language
+      value:
+        severity: Fatal
+        code: <error code> 
+        text: Language <language> is not supported. 
+    
+    415-UnsupportedMediaType:
+      summary: Unsupported Media Type
+      value:
+        severity: Fatal
+        code: <error code> 
+        text: Media type <media-type> is not supported. 
+
+    400-AppRevoked:
+      summary: >-
+        Client App is revoked
+      value:
+        severity: Fatal
+        code: <enter code here> 
+        text: The action is unsupported because this Client App is in the revoked state.
+
+    400-SwAP510:
+      summary: >-
+        SwAP510: The API method does not support non-repudiation.
+      value:
+        severity: Fatal
+        code: SwAP510 
+        text: The API method does not support non-repudiation.
+    400-SwAP509:
+      summary: >-
+        SwAP509: Missing mandatory signature on the non-repudiation API transaction.
+      value:
+        severity: Fatal
+        code: SwAP509 
+        text: Missing mandatory signature on the non-repudiation API transaction.
+    400-SwAP504-txt:
+      summary: >-
+        SwAP504: Text is custom to the schema error
+      value:
+        severity: Fatal
+        code: SwAP504 
+        text: Text is custom to the schema error
+    400-SwAP504-bic:
+      summary: >-
+        SwAP504: Invalid Bic.
+      value:
+        severity: Fatal
+        code: SwAP504 
+        text: Invalid Bic.
+    400-SwAP504-svc:
+      summary: >-
+        SwAP504: Invalid Service.
+      value:
+        severity: Fatal
+        code: SwAP504 
+        text: Invalid Service.
+    400-SwAP522:
+      summary: >-
+        SwAP522: The request cannot processed. The x-bic value provided is not valid.
+      value:
+        severity: Fatal
+        code: SwAP522 
+        text: The request cannot processed. The x-bic value provided is not valid.
+    400-SwAP504:
+      summary: >-
+        SwAP504: JSON request body does not conform to policy.
+      value:
+        severity: Fatal
+        code: SwAP504 
+        text: JSON request body does not conform to policy.
+    400-SwAP505:
+      summary: >-
+        SwAP505: XML request body does not conform to policy.
+      value:
+        severity: Fatal
+        code: SwAP505 
+        text: XML request body does not conform to policy.
+    400-SwAP501:
+      summary: >-
+        SwAP501: API request is malformed.
+      value:
+        severity: Fatal
+        code: SwAP501 
+        text: API request is malformed.
+
+    400-APPMGMT01:
+      summary: >-
+        Placeholder for Client App Management 400 response.
+      value:
+        severity: Fatal
+        code: APPMGMT01 
+        text: TBC - stuff goes wrong 
+
+    401-SwAP502-cert:
+      summary: >-
+        SwAP502: Invalid Signing Certificate. The certificate cannot be used for doing the API transaction.
+      value:
+        severity: Fatal
+        code: SwAP502 
+        text: Invalid Signing Certificate. The certificate cannot be used for doing the API transaction.
+    401-SwAP502-token:
+      summary: >-
+        SwAP502: Invalid OAuth access token.
+      value:
+        severity: Fatal
+        code: SwAP502 
+        text: Invalid OAuth access token.
+    401-SwAP508:
+      summary: >-
+        SwAP508: OAuth access token not provided.
+      value:
+        severity: Fatal
+        code: SwAP508 
+        text: OAuth access token not provided.
+    401-SwAP509:
+      summary: >-
+        SwAP509: Customer number not defined.
+      value:
+        severity: Fatal
+        code: SwAP509 
+        text: Customer number not defined.
+    403-SwAP503:
+      summary: >-
+        SwAP503: OAuth access token has insufficient scope for the requested service. 
+      value:
+        severity: Fatal
+        code: SwAP503 
+        text: OAuth access token has insufficient scope for the requested service. 
+    404-SwAP506:
+      summary: >-
+        SwAP506: Resource does not exist.
+      value:
+        severity: Fatal
+        code: SwAP506 
+        text: Resource does not exist.
+    429-SwAP507:
+      summary: >-
+        SwAP507: Request cannot be processed at this time. Please try again..
+      value:
+        severity: Transient
+        code: SwAP507 
+        text: Request cannot be processed at this time. Please try again..
+    503-SwAP590:
+      summary: >-
+        SwAP590: Service is temporarily unavailable.
+      value:
+        severity: Transient
+        code: SwAP590 
+        text: Service is temporarily unavailable.
+    503-SwAP599:
+      summary: >-
+        SwAP599: Service is temporarily unavailable.
+      value:
+        severity: Transient
+        code: SwAP599 
+        text: Service is temporarily unavailable.
+    504-SwAP591:
+      summary: >-
+        SwAP591: Service Provider time out.
+      value:
+        severity: Transient
+        code: SwAP591 
+        text: Service Provider time out.
+
+    # Default error response.
+    500-InternalServerError:
+      summary: Internal Server Error
+      value:
+        severity: Transient
+        code: <error code here> 
+        text: Server encountered an unexpected condition and cannot fulfill the request.
